@@ -90,6 +90,10 @@ interface ProfileInput {
   name: string
   email: string
   mobile: string
+  address?: string
+  city?: string
+  state?: string
+  pincode?: string
 }
 
 export async function saveUserProfile(uid: string, profile: ProfileInput): Promise<ServiceResult<null>> {
@@ -115,6 +119,10 @@ export async function getUserProfile(uid: string): Promise<ServiceResult<User | 
         name: data.name ?? '',
         mobile: data.mobile ?? '',
         email: data.email ?? undefined,
+        address: data.address ?? undefined,
+        city: data.city ?? undefined,
+        state: data.state ?? undefined,
+        pincode: data.pincode ?? undefined,
       },
     }
   } catch (err) {

@@ -10,6 +10,10 @@ export default function Profile() {
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState(user?.name ?? '')
   const [email, setEmail] = useState(user?.email ?? '')
+  const [address, setAddress] = useState(user?.address ?? '')
+  const [city, setCity] = useState(user?.city ?? '')
+  const [state, setState] = useState(user?.state ?? '')
+  const [pincode, setPincode] = useState(user?.pincode ?? '')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -18,6 +22,10 @@ export default function Profile() {
   const startEdit = () => {
     setName(user.name)
     setEmail(user.email ?? '')
+    setAddress(user.address ?? '')
+    setCity(user.city ?? '')
+    setState(user.state ?? '')
+    setPincode(user.pincode ?? '')
     setError('')
     setEditing(true)
   }
@@ -29,6 +37,10 @@ export default function Profile() {
       name: name.trim(),
       email,
       mobile: user.mobile,
+      address: address.trim(),
+      city: city.trim(),
+      state: state.trim(),
+      pincode,
     })
     setSaving(false)
     if (!result.ok) {
@@ -60,6 +72,20 @@ export default function Profile() {
                 <dt className="text-xs font-bold uppercase tracking-wide text-grey">Mobile Number</dt>
                 <dd className="mt-1 text-sm font-semibold text-ink">+91 {user.mobile}</dd>
               </div>
+              <div>
+                <dt className="text-xs font-bold uppercase tracking-wide text-grey">Delivery Address</dt>
+                <dd className="mt-1 text-sm font-semibold text-ink">
+                  {user.address ? (
+                    <>
+                      {user.address}
+                      <br />
+                      {[user.city, user.state, user.pincode].filter(Boolean).join(', ')}
+                    </>
+                  ) : (
+                    '—'
+                  )}
+                </dd>
+              </div>
             </dl>
             <Button variant="secondary" size="sm" className="mt-6" onClick={startEdit}>
               <Pencil size={14} /> Edit Profile
@@ -69,6 +95,18 @@ export default function Profile() {
           <div className="flex flex-col gap-4">
             <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
             <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input label="Home Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Input label="City" value={city} onChange={(e) => setCity(e.target.value)} />
+              <Input label="State" value={state} onChange={(e) => setState(e.target.value)} />
+            </div>
+            <Input
+              label="Pincode"
+              type="tel"
+              inputMode="numeric"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+            />
             {error && (
               <p className="rounded-lg bg-coral-50 px-3 py-2 text-sm font-medium text-coral-700" role="alert">
                 {error}

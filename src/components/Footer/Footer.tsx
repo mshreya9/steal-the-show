@@ -36,6 +36,7 @@ const COLUMNS: { title: string; links: { label: string; to: string }[] }[] = [
       { label: 'Rental Policy', to: '/help/rental-policy' },
       { label: 'Cancellation', to: '/help/cancellation' },
       { label: 'FAQs', to: '/help/faqs' },
+      { label: 'Find a Tailor', to: '/finder' },
     ],
   },
   {

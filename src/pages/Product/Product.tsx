@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
-import { Heart, Minus, Plus, Star, Users, Zap } from 'lucide-react'
+import { Heart, MapPin, Minus, Plus, Star, Users, Zap } from 'lucide-react'
 import { getProductById, PRODUCTS } from '../../data/products'
 import { useWishlist } from '../../context/WishlistContext'
 import { useCart } from '../../context/CartContext'
@@ -14,6 +14,7 @@ import ProductImage from '../../components/ProductImage/ProductImage'
 import Modal from '../../components/ui/Modal'
 import { formatINR } from '../../utils/inventory'
 import { calcGroupAvailability } from '../../utils/groupOrder'
+import { checkAvailability, type AvailabilityResult } from '../../utils/pincodeAvailability'
 
 export default function Product() {
   const { id } = useParams<{ id: string }>()
@@ -21,7 +22,7 @@ export default function Product() {
 
   const { isWishlisted, toggle } = useWishlist()
   const { items, addItem } = useCart()
-  const { requireAuth } = useAuth()
+  const { user, requireAuth } = useAuth()
 
   const [mode, setMode] = useState<PurchaseMode>(() => {
     if (!product) return 'buy'
@@ -38,11 +39,21 @@ export default function Product() {
   const [added, setAdded] = useState(false)
   const [groupQty, setGroupQty] = useState('')
   const [requestSent, setRequestSent] = useState(false)
+  const [pincodeInput, setPincodeInput] = useState(user?.pincode ?? '')
+  const [availability, setAvailability] = useState<AvailabilityResult | null>(null)
 
   const related = useMemo(() => {
     if (!product) return []
     return PRODUCTS.filter((p) => p.id !== product.id && p.occasionGroup === product.occasionGroup).slice(0, 4)
   }, [product])
+
+  // Auto-check availability against the shopper's saved pincode as soon as we
+  // know both — they can still override it with the inline checker below.
+  useEffect(() => {
+    if (product && user?.pincode) {
+      setAvailability(checkAvailability(user.pincode, product))
+    }
+  }, [product, user?.pincode])
 
   if (!product) return <Navigate to="/shop" replace />
 
@@ -58,6 +69,10 @@ export default function Product() {
   }
 
   const wishlisted = isWishlisted(product.id)
+
+  const handleCheckAvailability = () => {
+    setAvailability(checkAvailability(pincodeInput, product))
+  }
 
   return (
     <div className="container-shell py-8">
@@ -134,6 +149,38 @@ export default function Product() {
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <InventoryBadge inventory={product.inventory} />
             <span className="text-sm text-grey">{product.deliveryTime}</span>
+          </div>
+
+          <div className="mt-4 rounded-xl border border-grey-200 p-4">
+            <p className="flex items-center gap-1.5 text-sm font-bold text-ink">
+              <MapPin size={15} className="text-plum" /> Check delivery to your area
+            </p>
+            <div className="mt-2 flex gap-2">
+              <input
+                type="tel"
+                inputMode="numeric"
+                placeholder="Enter pincode"
+                value={pincodeInput}
+                onChange={(e) => setPincodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                aria-label="Pincode"
+                className="w-32 rounded-xl border border-grey-300 px-3 py-2 text-base focus:border-plum focus:outline-none sm:text-sm"
+              />
+              <Button type="button" variant="secondary" size="md" onClick={handleCheckAvailability}>
+                Check
+              </Button>
+            </div>
+            {availability && (
+              <p
+                className={`mt-2 text-sm font-semibold ${
+                  availability.status === 'available-24hr' || availability.status === 'available-standard'
+                    ? 'text-success'
+                    : 'text-coral-700'
+                }`}
+                role="status"
+              >
+                {availability.message}
+              </p>
+            )}
           </div>
 
           <div className="mt-6">

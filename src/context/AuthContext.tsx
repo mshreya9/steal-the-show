@@ -29,6 +29,10 @@ function runDevLogin(setUser: (u: User) => void, setStatus: (s: AuthStatus) => v
     name: 'Test User (Dev)',
     mobile: '9999999999',
     email: 'devtest@example.com',
+    address: '123 Demo Street',
+    city: 'Mumbai',
+    state: 'Maharashtra',
+    pincode: '400001',
   }
   bypassRef.current = true
   try {

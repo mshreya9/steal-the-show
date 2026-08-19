@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Heart, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
+import { Heart, Minus, Plus, Scissors, ShoppingBag, Trash2 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { getProductById } from '../../data/products'
@@ -137,6 +137,14 @@ export default function Bag() {
             Checkout coming soon
           </Button>
           <p className="mt-2 text-center text-xs text-grey">Payment and checkout will be available in the next phase.</p>
+
+          <Link
+            to="/finder"
+            className="mt-5 flex items-center gap-2 rounded-xl border border-dashed border-grey-300 p-3 text-xs font-semibold text-grey-DEFAULT hover:border-plum hover:text-plum"
+          >
+            <Scissors size={14} className="shrink-0 text-plum-400" />
+            Need alterations after your order arrives? Find nearby stitching services.
+          </Link>
         </div>
       </div>
     </div>

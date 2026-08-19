@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
 import Home from './pages/Home/Home'
@@ -16,6 +17,10 @@ import StaticPage from './pages/Static/StaticPage'
 import NotFound from './pages/NotFound/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 
+// Lazy-loaded: pulls in Leaflet (~170kB), which no other page needs — keeping it
+// out of the main bundle so it only loads for shoppers who visit the Finder.
+const Finder = lazy(() => import('./pages/Finder/Finder'))
+
 export default function App() {
   return (
     <Routes>
@@ -31,6 +36,14 @@ export default function App() {
         <Route path="/kids" element={<Navigate to="/category/kids" replace />} />
         <Route path="/accessories" element={<Navigate to="/category/accessories" replace />} />
         <Route path="/group-orders" element={<GroupOrders />} />
+        <Route
+          path="/finder"
+          element={
+            <Suspense fallback={null}>
+              <Finder />
+            </Suspense>
+          }
+        />
         <Route path="/occasion/:occasion" element={<Occasion />} />
         <Route path="/category/:category" element={<Category />} />
         <Route path="/product/:id" element={<Product />} />

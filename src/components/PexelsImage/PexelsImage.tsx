@@ -3,6 +3,7 @@ import { usePexelsImage } from '../../hooks/usePexelsImage'
 
 export default function PexelsImage({
   query,
+  seed = 0,
   fallbackSrc,
   alt,
   className = '',
@@ -10,13 +11,14 @@ export default function PexelsImage({
   showAttribution = false,
 }: {
   query: string
+  seed?: number
   fallbackSrc: string
   alt: string
   className?: string
   loading?: 'lazy' | 'eager'
   showAttribution?: boolean
 }) {
-  const { url, photo, loading: fetching, error } = usePexelsImage(query)
+  const { url, photo, loading: fetching, error } = usePexelsImage(query, seed)
   const [broken, setBroken] = useState(false)
 
   // A failed load must not permanently lock the card onto the fallback — give

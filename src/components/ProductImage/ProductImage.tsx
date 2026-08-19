@@ -18,6 +18,7 @@ export default function ProductImage({
   return (
     <PexelsImage
       query={getPexelsQuery(product)}
+      seed={product.id}
       fallbackSrc={product.image}
       alt={decorative ? '' : product.name}
       className={className}

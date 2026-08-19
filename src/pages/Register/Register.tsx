@@ -14,6 +14,7 @@ import { auth } from '../../lib/firebase'
 
 const MOBILE_REGEX = /^[6-9]\d{9}$/
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const PINCODE_REGEX = /^\d{6}$/
 const RECAPTCHA_ID = 'recaptcha-container-register'
 
 interface PasswordChecks {
@@ -47,6 +48,12 @@ export default function Register() {
   const [mobileError, setMobileError] = useState('')
   const [recaptchaKey, setRecaptchaKey] = useState(0)
 
+  const [address, setAddress] = useState('')
+  const [city, setCity] = useState('')
+  const [state, setState] = useState('')
+  const [pincode, setPincode] = useState('')
+  const [addressTouched, setAddressTouched] = useState(false)
+
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [confirmTouched, setConfirmTouched] = useState(false)
@@ -71,8 +78,11 @@ export default function Register() {
   const emailValid = EMAIL_REGEX.test(email)
   const mobileValid = MOBILE_REGEX.test(mobile)
   const nameValid = name.trim().length > 1
+  const pincodeValid = PINCODE_REGEX.test(pincode)
+  const addressValid = address.trim().length > 4 && city.trim().length > 1 && state.trim().length > 1 && pincodeValid
 
-  const formValid = nameValid && emailValid && mobileValid && mobileVerified && passwordValid && confirmValid && agreed
+  const formValid =
+    nameValid && emailValid && mobileValid && mobileVerified && addressValid && passwordValid && confirmValid && agreed
 
   const openMobileVerify = async () => {
     if (!mobileValid) {
@@ -116,6 +126,7 @@ export default function Register() {
     setNameTouched(true)
     setEmailTouched(true)
     setMobileTouched(true)
+    setAddressTouched(true)
     setConfirmTouched(true)
     if (!agreed) setAgreedError('Please accept the Terms & Privacy Policy to continue.')
     if (!formValid) {
@@ -129,7 +140,15 @@ export default function Register() {
     }
     setSubmitError('')
     setSubmitting(true)
-    const result = await saveUserProfile(uid, { name: name.trim(), email, mobile })
+    const result = await saveUserProfile(uid, {
+      name: name.trim(),
+      email,
+      mobile,
+      address: address.trim(),
+      city: city.trim(),
+      state: state.trim(),
+      pincode,
+    })
     setSubmitting(false)
     if (!result.ok) {
       setSubmitError(result.error)
@@ -215,6 +234,46 @@ export default function Register() {
                 </Button>
               )}
             </div>
+          </div>
+
+          <div className="flex flex-col gap-4 rounded-xl border border-grey-200 p-4">
+            <p className="text-sm font-bold text-ink">Delivery Address</p>
+            <Input
+              label="Home Address"
+              placeholder="Flat / House no., street, locality"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              onBlur={() => setAddressTouched(true)}
+              error={addressTouched && address.trim().length <= 4 ? 'Enter your full address.' : undefined}
+            />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Input
+                label="City"
+                placeholder="Enter your city"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                onBlur={() => setAddressTouched(true)}
+                error={addressTouched && city.trim().length <= 1 ? 'Enter your city.' : undefined}
+              />
+              <Input
+                label="State"
+                placeholder="Enter your state"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                onBlur={() => setAddressTouched(true)}
+                error={addressTouched && state.trim().length <= 1 ? 'Enter your state.' : undefined}
+              />
+            </div>
+            <Input
+              label="Pincode"
+              type="tel"
+              inputMode="numeric"
+              placeholder="6-digit pincode"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              onBlur={() => setAddressTouched(true)}
+              error={addressTouched && !pincodeValid ? 'Enter a valid 6-digit pincode.' : undefined}
+            />
           </div>
 
           <div>
