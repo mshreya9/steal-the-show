@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import type { Occasion } from '../../data/occasions'
-import { placeholderImage } from '../../utils/placeholder'
 import { getOccasionQuery } from '../../utils/occasionQuery'
+import { getOccasionFallbackImage } from '../../utils/localFallback'
 import PexelsImage from '../PexelsImage/PexelsImage'
 
 export default function OccasionCard({ occasion }: { occasion: Occasion }) {
@@ -13,7 +13,7 @@ export default function OccasionCard({ occasion }: { occasion: Occasion }) {
     >
       <PexelsImage
         query={getOccasionQuery(occasion)}
-        fallbackSrc={placeholderImage(occasion.title, occasion.gradient)}
+        fallbackSrc={getOccasionFallbackImage(occasion.group)}
         alt=""
         loading="lazy"
         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

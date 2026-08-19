@@ -8,7 +8,8 @@ import Input from '../../components/ui/Input'
 import OTPInput from '../../components/OTPInput/OTPInput'
 import PromotionalBanner from '../../components/PromotionalBanner/PromotionalBanner'
 import { useCountdown } from '../../hooks/useCountdown'
-import { placeholderImage, GRADIENTS } from '../../utils/placeholder'
+import { HERO_IMAGE } from '../../utils/localFallback'
+import PexelsImage from '../../components/PexelsImage/PexelsImage'
 import { resetRecaptcha, sendMobileOtp, verifyMobileOtp } from '../../services/authService'
 import { useAuth } from '../../context/AuthContext'
 
@@ -34,8 +35,6 @@ export default function Login() {
 
   const confirmationRef = useRef<ConfirmationResult | null>(null)
   const countdown = useCountdown(30)
-
-  const heroImage = placeholderImage('Steal the Show', GRADIENTS.plum)
 
   useEffect(() => {
     return () => resetRecaptcha()
@@ -87,7 +86,13 @@ export default function Login() {
   return (
     <div className="grid min-h-[calc(100vh-72px)] grid-cols-1 lg:grid-cols-2">
       <div className="relative hidden overflow-hidden lg:block">
-        <img src={heroImage} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+        <PexelsImage
+          query="red carpet fashion event"
+          fallbackSrc={HERO_IMAGE}
+          alt=""
+          loading="eager"
+          className="h-full w-full object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-plum-900/70 via-plum-700/20 to-transparent" />
         <div className="relative flex h-full flex-col justify-end p-12 text-white">
           <Sparkles size={28} className="mb-4 text-coral-300" />

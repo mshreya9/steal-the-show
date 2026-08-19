@@ -1,5 +1,6 @@
 import type { Product } from '../types/product'
-import { GRADIENTS, placeholderImage } from '../utils/placeholder'
+import { GRADIENTS } from '../utils/placeholder'
+import { getProductFallbackImage } from '../utils/localFallback'
 
 type Seed = Omit<Product, 'image'>
 
@@ -351,7 +352,7 @@ const seeds: Seed[] = [
 
 export const PRODUCTS: Product[] = seeds.map((p) => ({
   ...p,
-  image: placeholderImage(p.name, p.gradient),
+  image: getProductFallbackImage(p),
 }))
 
 export function getProductById(id: number) {

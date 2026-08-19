@@ -7,7 +7,8 @@ import CategoryCard from '../../components/CategoryCard/CategoryCard'
 import { OCCASIONS } from '../../data/occasions'
 import { CATEGORIES } from '../../data/categories'
 import { PRODUCTS } from '../../data/products'
-import { placeholderImage, GRADIENTS } from '../../utils/placeholder'
+import { HERO_IMAGE } from '../../utils/localFallback'
+import PexelsImage from '../../components/PexelsImage/PexelsImage'
 
 const TRENDING_IDS = [1, 3, 9, 16, 21, 26, 32, 37]
 const trending = TRENDING_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter(Boolean) as typeof PRODUCTS
@@ -17,10 +18,12 @@ export default function Home() {
     <div>
       {/* HERO */}
       <section className="relative overflow-hidden bg-plum-500">
-        <img
-          src={placeholderImage('Steal the Show', GRADIENTS.plum)}
+        <PexelsImage
+          query="red carpet fashion event"
+          fallbackSrc={HERO_IMAGE}
           alt="Models dressed for a themed event, ready to steal the show"
-          className="absolute inset-0 h-full w-full object-cover opacity-70"
+          loading="eager"
+          className="h-full w-full object-cover opacity-70"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-plum-800/90 via-plum-700/60 to-plum-500/30" />
         <div className="container-shell relative flex min-h-[520px] flex-col justify-center py-16 sm:min-h-[600px]">
