@@ -31,7 +31,7 @@ const RULES: { test: (p: Product) => boolean; query: string }[] = [
 
   // Weddings & Celebrations
   { test: (p) => p.subcategory === 'Lehengas', query: 'Indian wedding lehenga' },
-  { test: (p) => p.subcategory === 'Sherwanis', query: 'Indian sherwani' },
+  { test: (p) => p.subcategory === 'Sherwanis', query: 'groom sherwani wedding' },
   { test: (p) => p.subcategory === 'Sarees', query: 'Banarasi saree' },
   { test: (p) => p.subcategory === 'Indo-Western', query: 'Indo western gown' },
   { test: (p) => p.subcategory === 'Bridesmaid', query: 'bridesmaid dress' },

@@ -1,10 +1,11 @@
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import ProductListingLayout from '../../components/ProductListing/ProductListingLayout'
 import { PRODUCTS } from '../../data/products'
 import type { ListingFilters } from '../../utils/listing'
 
 export default function Shop() {
   const [params] = useSearchParams()
+  const location = useLocation()
   const mode = params.get('mode')
   const delivery = params.get('delivery')
 
@@ -14,6 +15,7 @@ export default function Shop() {
 
   return (
     <ProductListingLayout
+      key={location.key}
       eyebrow="All Looks"
       title="Shop Steal the Show"
       description="Every costume, outfit and accessory across every occasion — buy or rent, delivered fast."

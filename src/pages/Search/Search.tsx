@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { useMemo } from 'react'
 import ProductListingLayout from '../../components/ProductListing/ProductListingLayout'
 import SearchBar from '../../components/SearchBar/SearchBar'
@@ -6,6 +6,7 @@ import { PRODUCTS } from '../../data/products'
 
 export default function Search() {
   const [params] = useSearchParams()
+  const location = useLocation()
   const query = params.get('q')?.trim() ?? ''
 
   const results = useMemo(() => {
@@ -29,6 +30,7 @@ export default function Search() {
       </div>
 
       <ProductListingLayout
+        key={location.key}
         title={query ? `Results for "${query}"` : 'Search'}
         products={results}
         emptyState={
