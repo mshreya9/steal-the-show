@@ -20,7 +20,7 @@ const RECAPTCHA_ID = 'recaptcha-container-login'
 export default function Login() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { refreshProfile } = useAuth()
+  const { refreshProfile, devLogin } = useAuth()
 
   const [stage, setStage] = useState<Stage>('mobile')
   const [mobile, setMobile] = useState('')
@@ -80,7 +80,7 @@ export default function Login() {
       return
     }
     await refreshProfile()
-    const redirectTo = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/'
+    const redirectTo = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/home'
     navigate(redirectTo, { replace: true })
   }
 
@@ -132,6 +132,30 @@ export default function Login() {
                   Create an account
                 </Link>
               </p>
+
+              {import.meta.env.DEV && (
+                <div className="mt-8 rounded-xl border-2 border-dashed border-amber-400 bg-amber-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-wide text-amber-700">
+                    Dev only — not part of the real app
+                  </p>
+                  <p className="mt-1 text-xs text-amber-800">
+                    Skip Firebase phone verification and log in as a local test user, so you can test cart, checkout
+                    gating, and profile pages while OTP is being set up.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    className="mt-3 border-amber-500 text-amber-700 hover:bg-amber-100"
+                    onClick={() => {
+                      devLogin()
+                      navigate('/home')
+                    }}
+                  >
+                    Skip login (dev test user)
+                  </Button>
+                </div>
+              )}
             </>
           )}
 

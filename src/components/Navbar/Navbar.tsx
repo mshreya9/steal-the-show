@@ -68,7 +68,7 @@ export default function Navbar() {
           >
             <Menu size={24} />
           </button>
-          <Link to="/" className="shrink-0 font-display text-base font-extrabold tracking-tight text-plum min-[380px]:text-lg sm:text-xl">
+          <Link to="/home" className="shrink-0 font-display text-base font-extrabold tracking-tight text-plum min-[380px]:text-lg sm:text-xl">
             Steal the Show
           </Link>
         </div>
@@ -115,7 +115,7 @@ export default function Navbar() {
             className="relative hidden rounded-lg p-2 text-ink hover:bg-plum-50 hover:text-plum min-[380px]:block"
           >
             <Heart size={20} />
-            {ids.length > 0 && (
+            {isAuthenticated && ids.length > 0 && (
               <span className="absolute right-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral text-[10px] font-bold text-white">
                 {ids.length}
               </span>
@@ -127,7 +127,7 @@ export default function Navbar() {
             className="relative rounded-lg p-2 text-ink hover:bg-plum-50 hover:text-plum"
           >
             <ShoppingBag size={20} />
-            {count > 0 && (
+            {isAuthenticated && count > 0 && (
               <span className="absolute right-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral text-[10px] font-bold text-white">
                 {count}
               </span>

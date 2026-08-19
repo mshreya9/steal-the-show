@@ -4,7 +4,7 @@
 export function placeholderImage(label: string, gradient: [string, string] = ['#4B164C', '#7A2F7D']): string {
   const initials = label
     .split(' ')
-    .filter(Boolean)
+    .filter((w) => /[a-zA-Z0-9]/.test(w))
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase())
     .join('')

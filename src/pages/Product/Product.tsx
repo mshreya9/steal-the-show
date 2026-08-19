@@ -20,10 +20,19 @@ export default function Product() {
   const product = id ? getProductById(Number(id)) : undefined
 
   const { isWishlisted, toggle } = useWishlist()
-  const { addItem } = useCart()
+  const { items, addItem } = useCart()
   const { requireAuth } = useAuth()
 
-  const [mode, setMode] = useState<PurchaseMode>(product?.isRentable ? 'rent' : 'buy')
+  const [mode, setMode] = useState<PurchaseMode>(() => {
+    if (!product) return 'buy'
+    const hasRentLine = items.some((i) => i.productId === product.id && i.mode === 'rent')
+    const hasBuyLine = items.some((i) => i.productId === product.id && i.mode === 'buy')
+    // Default to whichever mode the shopper already added this product in from
+    // the card/listing, so the toggle matches what's actually in their bag.
+    if (hasBuyLine && !hasRentLine) return 'buy'
+    if (hasRentLine && !hasBuyLine) return 'rent'
+    return product.isRentable ? 'rent' : 'buy'
+  })
   const [size, setSize] = useState(product?.sizes[0] ?? '')
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)

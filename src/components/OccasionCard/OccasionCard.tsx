@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import type { Occasion } from '../../data/occasions'
 import { placeholderImage } from '../../utils/placeholder'
+import { getOccasionQuery } from '../../utils/occasionQuery'
+import PexelsImage from '../PexelsImage/PexelsImage'
 
 export default function OccasionCard({ occasion }: { occasion: Occasion }) {
   return (
@@ -9,12 +11,12 @@ export default function OccasionCard({ occasion }: { occasion: Occasion }) {
       to={`/occasion/${occasion.slug}`}
       className="group relative flex h-64 flex-col justify-end overflow-hidden rounded-2xl shadow-card transition-shadow hover:shadow-card-hover"
     >
-      <img
-        src={placeholderImage(occasion.title, occasion.gradient)}
+      <PexelsImage
+        query={getOccasionQuery(occasion)}
+        fallbackSrc={placeholderImage(occasion.title, occasion.gradient)}
         alt=""
-        aria-hidden="true"
         loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent" />
       <div className="relative p-5 text-white">

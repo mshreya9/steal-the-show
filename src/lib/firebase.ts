@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp, getApps } from 'firebase/app'
 import { getAuth, type Auth } from 'firebase/auth'
 import { getFirestore, type Firestore } from 'firebase/firestore'
 
@@ -20,6 +20,15 @@ if (firebaseConfigured) {
     const app = initializeApp(firebaseConfig)
     auth = getAuth(app)
     db = getFirestore(app)
+
+    // TEMPORARY diagnostic-only logging (dev builds only, strips out of production).
+    // No secrets logged — see conversation for what triggered this.
+    if (import.meta.env.DEV) {
+      console.info('[firebase debug] project ID:', app.options.projectId)
+      console.info('[firebase debug] auth domain:', app.options.authDomain)
+      console.info('[firebase debug] app name:', app.name)
+      console.info('[firebase debug] existing Firebase apps count:', getApps().length)
+    }
   } catch (err) {
     // An invalid/placeholder config must never crash the whole app — fall back to
     // a "not configured" state so the UI can show a friendly message instead.

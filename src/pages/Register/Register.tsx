@@ -32,7 +32,7 @@ function checkPassword(pw: string): PasswordChecks {
 
 export default function Register() {
   const navigate = useNavigate()
-  const { refreshProfile } = useAuth()
+  const { logout } = useAuth()
 
   const [name, setName] = useState('')
   const [nameTouched, setNameTouched] = useState(false)
@@ -135,8 +135,10 @@ export default function Register() {
       setSubmitError(result.error)
       return
     }
-    await refreshProfile()
-    navigate('/')
+    // Account created — send them to log in with it deliberately, rather than
+    // treating registration as an automatic sign-in.
+    await logout()
+    navigate('/login')
   }
 
   const requirementRows = useMemo(

@@ -10,6 +10,14 @@ const NOT_CONFIGURED_ERROR =
 
 function friendlyError(err: unknown): string {
   const code = (err as { code?: string })?.code ?? ''
+
+  // TEMPORARY diagnostic-only logging (dev builds only). Logs the full Firebase
+  // error object so the exact code/message/customData is visible in devtools —
+  // no API keys, tokens, OTPs, or credentials are included.
+  if (import.meta.env.DEV) {
+    console.error('[auth debug] raw Firebase error:', err)
+  }
+
   switch (code) {
     case 'auth/invalid-phone-number':
       return 'Enter a valid mobile number.'
