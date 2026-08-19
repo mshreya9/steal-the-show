@@ -18,7 +18,7 @@ export default function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden bg-plum-500">
         <img
-          src={placeholderImage('Steal The Show', GRADIENTS.plum)}
+          src={placeholderImage('Steal the Show', GRADIENTS.plum)}
           alt="Models dressed for a themed event, ready to steal the show"
           className="absolute inset-0 h-full w-full object-cover opacity-70"
         />

@@ -1,4 +1,5 @@
 import type { Product } from '../types/product'
+import { formatINR } from './inventory'
 
 export type SortKey = 'recommended' | 'price-asc' | 'price-desc' | 'rating' | 'availability'
 
@@ -49,6 +50,55 @@ export function applyFilters(products: Product[], filters: ListingFilters): Prod
     if (filters.only24Hour && !p.is24HourDelivery) return false
     return true
   })
+}
+
+export interface FilterChip {
+  key: string
+  label: string
+  remove: (filters: ListingFilters) => ListingFilters
+}
+
+export function activeFilterChips(filters: ListingFilters): FilterChip[] {
+  const chips: FilterChip[] = []
+
+  filters.productTypes.forEach((v) =>
+    chips.push({ key: `type-${v}`, label: v, remove: (f) => ({ ...f, productTypes: f.productTypes.filter((x) => x !== v) }) }),
+  )
+  filters.occasionGroups.forEach((v) =>
+    chips.push({
+      key: `occ-${v}`,
+      label: v,
+      remove: (f) => ({ ...f, occasionGroups: f.occasionGroups.filter((x) => x !== v) }),
+    }),
+  )
+  filters.subcategories.forEach((v) =>
+    chips.push({
+      key: `sub-${v}`,
+      label: v,
+      remove: (f) => ({ ...f, subcategories: f.subcategories.filter((x) => x !== v) }),
+    }),
+  )
+  filters.buyRent.forEach((v) =>
+    chips.push({
+      key: `mode-${v}`,
+      label: v === 'buy' ? 'Buy' : 'Rent',
+      remove: (f) => ({ ...f, buyRent: f.buyRent.filter((x) => x !== v) }),
+    }),
+  )
+  filters.sizes.forEach((v) =>
+    chips.push({ key: `size-${v}`, label: `Size ${v}`, remove: (f) => ({ ...f, sizes: f.sizes.filter((x) => x !== v) }) }),
+  )
+  if (filters.only24Hour) {
+    chips.push({ key: '24hr', label: '24-Hour Delivery', remove: (f) => ({ ...f, only24Hour: false }) })
+  }
+  if (filters.onlyAvailable) {
+    chips.push({ key: 'available', label: 'In stock only', remove: (f) => ({ ...f, onlyAvailable: false }) })
+  }
+  if (filters.maxPrice > 0) {
+    chips.push({ key: 'price', label: `Up to ${formatINR(filters.maxPrice)}`, remove: (f) => ({ ...f, maxPrice: 0 }) })
+  }
+
+  return chips
 }
 
 export function sortProducts(products: Product[], sort: SortKey): Product[] {

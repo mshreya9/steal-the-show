@@ -15,7 +15,7 @@ export default function Shop() {
   return (
     <ProductListingLayout
       eyebrow="All Looks"
-      title="Shop Steal The Show"
+      title="Shop Steal the Show"
       description="Every costume, outfit and accessory across every occasion — buy or rent, delivered fast."
       products={PRODUCTS}
       initialFilters={initialFilters}

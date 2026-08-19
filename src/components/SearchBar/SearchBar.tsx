@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Search, X } from 'lucide-react'
 import { PRODUCTS } from '../../data/products'
+import ProductImage from '../ProductImage/ProductImage'
 
 export default function SearchBar({
   autoFocus,
@@ -57,7 +58,7 @@ export default function SearchBar({
           onBlur={() => window.setTimeout(() => setFocused(false), 120)}
           placeholder={placeholder}
           aria-label="Search products"
-          className="w-full flex-1 bg-transparent text-sm text-ink placeholder:text-grey focus:outline-none"
+          className="w-full flex-1 bg-transparent text-base text-ink placeholder:text-grey focus:outline-none sm:text-sm"
         />
         {query && (
           <button type="button" aria-label="Clear search" onClick={() => setQuery('')}>
@@ -69,21 +70,28 @@ export default function SearchBar({
       {focused && suggestions.length > 0 && (
         <div className="absolute left-0 right-0 top-full z-40 mt-2 max-h-96 overflow-auto rounded-2xl border border-grey-200 bg-white p-2 shadow-pop animate-slide-down">
           {suggestions.map((p) => (
-            <button
+            <Link
               key={p.id}
-              onClick={() => submit(p.name)}
+              to={`/product/${p.id}`}
+              onClick={() => {
+                setFocused(false)
+                onNavigate?.()
+              }}
               className="flex w-full items-center gap-3 rounded-xl p-2 text-left hover:bg-plum-50"
             >
-              <img src={p.image} alt="" aria-hidden="true" className="h-11 w-11 rounded-lg object-cover" />
+              <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-plum-50">
+                <ProductImage product={p} loading="lazy" decorative className="h-full w-full object-cover" />
+              </div>
               <span className="flex-1 min-w-0">
                 <span className="block truncate text-sm font-semibold text-ink">{p.name}</span>
                 <span className="block text-xs text-grey">
                   {p.productType} · {p.occasion}
                 </span>
               </span>
-            </button>
+            </Link>
           ))}
           <button
+            type="button"
             onClick={() => submit()}
             className="mt-1 flex w-full items-center gap-2 rounded-xl p-2.5 text-left text-sm font-semibold text-plum hover:bg-plum-50"
           >

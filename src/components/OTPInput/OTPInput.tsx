@@ -50,7 +50,7 @@ export default function OTPInput({
 
   return (
     <div>
-      <div className="flex justify-between gap-2" role="group" aria-label="One-time password">
+      <div className="flex justify-between gap-1.5 sm:gap-2" role="group" aria-label="One-time password">
         {values.map((v, i) => (
           <input
             key={i}
@@ -64,7 +64,7 @@ export default function OTPInput({
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             onPaste={handlePaste}
-            className={`h-12 w-12 rounded-xl border text-center text-lg font-bold text-ink focus:outline-none focus:border-plum sm:h-14 sm:w-14 ${
+            className={`h-10 w-10 rounded-xl border text-center text-base font-bold text-ink focus:outline-none focus:border-plum sm:h-12 sm:w-12 sm:text-lg lg:h-14 lg:w-14 ${
               error ? 'border-coral-600' : 'border-grey-300'
             }`}
           />

@@ -36,7 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             aria-invalid={!!error}
             aria-describedby={errorId ?? hintId}
-            className={`w-full flex-1 rounded-xl bg-transparent px-4 py-3 text-sm text-ink placeholder:text-grey-300 focus:outline-none ${className}`}
+            className={`w-full flex-1 rounded-xl bg-transparent px-4 py-3 text-base text-ink placeholder:text-grey-300 focus:outline-none sm:text-sm ${className}`}
             {...props}
           />
           {rightSlot && <div className="pr-2">{rightSlot}</div>}

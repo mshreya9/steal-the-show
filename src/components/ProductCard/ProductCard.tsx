@@ -1,31 +1,83 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Heart, Star, Users, Zap } from 'lucide-react'
+import { Heart, Minus, Plus, Star, Users, Zap } from 'lucide-react'
 import type { Product } from '../../types/product'
 import InventoryBadge from '../InventoryBadge/InventoryBadge'
 import { useWishlist } from '../../context/WishlistContext'
 import { useCart } from '../../context/CartContext'
+import { useAuth } from '../../context/AuthContext'
 import { formatINR } from '../../utils/inventory'
+import ProductImage from '../ProductImage/ProductImage'
 
 export default function ProductCard({ product }: { product: Product }) {
   const { isWishlisted, toggle } = useWishlist()
-  const { addItem } = useCart()
+  const { items, addItem, updateQuantity, removeItem } = useCart()
+  const { requireAuth } = useAuth()
   const wishlisted = isWishlisted(product.id)
-  const [justAdded, setJustAdded] = useState<'buy' | 'rent' | null>(null)
+  const size = product.sizes[0]
+
+  const lineFor = (mode: 'buy' | 'rent') =>
+    items.find((i) => i.productId === product.id && i.mode === mode && i.size === size)
 
   const quickAdd = (mode: 'buy' | 'rent') => {
-    addItem({ productId: product.id, mode, size: product.sizes[0], quantity: 1 })
-    setJustAdded(mode)
-    window.setTimeout(() => setJustAdded(null), 1400)
+    requireAuth(() => addItem({ productId: product.id, mode, size, quantity: 1 }))
+  }
+
+  const renderCta = (mode: 'buy' | 'rent') => {
+    const line = lineFor(mode)
+    if (!line) {
+      return (
+        <button
+          onClick={() => quickAdd(mode)}
+          className={
+            mode === 'rent'
+              ? 'flex-1 rounded-lg border border-plum py-1.5 text-xs font-bold text-plum transition-colors hover:bg-plum-50'
+              : 'flex-1 rounded-lg bg-plum py-1.5 text-xs font-bold text-white transition-colors hover:bg-plum-600'
+          }
+        >
+          {mode === 'rent' ? 'Rent' : 'Buy'}
+        </button>
+      )
+    }
+    return (
+      <div
+        className={`flex flex-1 items-center justify-between rounded-lg py-1 pl-1.5 pr-1.5 text-xs font-bold ${
+          mode === 'rent' ? 'border border-plum text-plum' : 'bg-plum text-white'
+        }`}
+      >
+        <button
+          aria-label={`Decrease ${mode} quantity`}
+          onClick={() =>
+            line.quantity <= 1
+              ? removeItem(product.id, mode, size)
+              : updateQuantity(product.id, mode, size, line.quantity - 1)
+          }
+          className={`flex h-5 w-5 items-center justify-center rounded ${
+            mode === 'rent' ? 'hover:bg-plum-50' : 'hover:bg-plum-600'
+          }`}
+        >
+          <Minus size={12} />
+        </button>
+        <span aria-live="polite">{line.quantity}</span>
+        <button
+          aria-label={`Increase ${mode} quantity`}
+          disabled={line.quantity >= product.inventory}
+          onClick={() => updateQuantity(product.id, mode, size, line.quantity + 1)}
+          className={`flex h-5 w-5 items-center justify-center rounded disabled:opacity-40 ${
+            mode === 'rent' ? 'hover:bg-plum-50' : 'hover:bg-plum-600'
+          }`}
+        >
+          <Plus size={12} />
+        </button>
+      </div>
+    )
   }
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-grey-200 bg-white shadow-card transition-shadow hover:shadow-card-hover">
       <div className="relative aspect-[4/5] overflow-hidden bg-plum-50">
-        <Link to={`/product/${product.id}`} aria-label={product.name}>
-          <img
-            src={product.image}
-            alt={product.name}
+        <Link to={`/product/${product.id}`} aria-label={product.name} className="absolute inset-0">
+          <ProductImage
+            product={product}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           />
@@ -92,22 +144,8 @@ export default function ProductCard({ product }: { product: Product }) {
         </p>
 
         <div className="mt-auto flex gap-2 pt-2">
-          {product.isRentable && (
-            <button
-              onClick={() => quickAdd('rent')}
-              className="flex-1 rounded-lg border border-plum py-1.5 text-xs font-bold text-plum transition-colors hover:bg-plum-50"
-            >
-              {justAdded === 'rent' ? 'Added ✓' : 'Rent'}
-            </button>
-          )}
-          {product.isBuyable && (
-            <button
-              onClick={() => quickAdd('buy')}
-              className="flex-1 rounded-lg bg-plum py-1.5 text-xs font-bold text-white transition-colors hover:bg-plum-600"
-            >
-              {justAdded === 'buy' ? 'Added ✓' : 'Buy'}
-            </button>
-          )}
+          {product.isRentable && renderCta('rent')}
+          {product.isBuyable && renderCta('buy')}
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { useWishlist } from '../../context/WishlistContext'
 import { getProductById } from '../../data/products'
 import Button from '../../components/ui/Button'
 import InventoryBadge from '../../components/InventoryBadge/InventoryBadge'
+import ProductImage from '../../components/ProductImage/ProductImage'
 import { formatINR } from '../../utils/inventory'
 
 export default function Bag() {
@@ -50,8 +51,8 @@ export default function Bag() {
                 key={`${p.id}-${item.mode}-${item.size}`}
                 className="flex gap-4 rounded-2xl border border-grey-200 bg-white p-4"
               >
-                <Link to={`/product/${p.id}`} className="h-24 w-20 shrink-0 overflow-hidden rounded-xl bg-plum-50">
-                  <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
+                <Link to={`/product/${p.id}`} className="relative h-24 w-20 shrink-0 overflow-hidden rounded-xl bg-plum-50">
+                  <ProductImage product={p} loading="lazy" className="h-full w-full object-cover" />
                 </Link>
                 <div className="flex flex-1 flex-col">
                   <div className="flex items-start justify-between gap-2">
@@ -73,7 +74,7 @@ export default function Bag() {
                     <InventoryBadge inventory={p.inventory} size="sm" />
                   </div>
 
-                  <div className="mt-auto flex items-center justify-between pt-3">
+                  <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-3">
                     <div className="flex items-center gap-2 rounded-lg border border-grey-200 px-1.5 py-1">
                       <button
                         aria-label="Decrease quantity"
@@ -101,7 +102,7 @@ export default function Bag() {
                         aria-label="Move to wishlist"
                         className="flex items-center gap-1 text-xs font-semibold text-grey-DEFAULT hover:text-plum"
                       >
-                        <Heart size={13} /> Move to Wishlist
+                        <Heart size={13} /> <span className="hidden sm:inline">Move to Wishlist</span>
                       </button>
                       <button
                         onClick={() => removeItem(p.id, item.mode, item.size)}

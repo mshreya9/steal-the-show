@@ -79,7 +79,7 @@ export default function Footer() {
 
         <div className="mt-10 flex flex-col items-center gap-4 border-t border-grey-200 pt-6 sm:flex-row sm:justify-between">
           <div>
-            <p className="font-display text-base font-extrabold text-plum">STEAL THE SHOW</p>
+            <p className="font-display text-base font-extrabold text-plum">Steal the Show</p>
             <p className="mt-1 text-xs text-grey">Steal the show. We'll handle the look.</p>
           </div>
           <div className="flex items-center gap-3">
@@ -95,7 +95,7 @@ export default function Footer() {
             ))}
           </div>
         </div>
-        <p className="mt-6 text-center text-xs text-grey sm:text-left">© 2026 STEAL THE SHOW. All rights reserved.</p>
+        <p className="mt-6 text-center text-xs text-grey sm:text-left">© 2026 Steal the Show. All rights reserved.</p>
       </div>
     </footer>
   )

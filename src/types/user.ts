@@ -1,8 +1,8 @@
 export interface User {
+  uid: string
   name: string
-  mobile?: string
+  mobile: string
   email?: string
-  authMethod: 'mobile' | 'email' | 'google' | 'apple'
 }
 
-export type AuthStatus = 'logged-out' | 'verifying-mobile' | 'verifying-email' | 'logged-in'
+export type AuthStatus = 'logged-out' | 'loading' | 'logged-in'

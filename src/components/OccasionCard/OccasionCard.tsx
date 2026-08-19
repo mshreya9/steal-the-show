@@ -13,6 +13,7 @@ export default function OccasionCard({ occasion }: { occasion: Occasion }) {
         src={placeholderImage(occasion.title, occasion.gradient)}
         alt=""
         aria-hidden="true"
+        loading="lazy"
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent" />

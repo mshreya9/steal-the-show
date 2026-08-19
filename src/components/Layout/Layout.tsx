@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import Navbar from '../Navbar/Navbar'
 import Footer from '../Footer/Footer'
+import AuthPromptModal from '../AuthPromptModal/AuthPromptModal'
 
 export default function Layout() {
   const { pathname } = useLocation()
@@ -17,6 +18,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <AuthPromptModal />
     </div>
   )
 }

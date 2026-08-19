@@ -3,7 +3,15 @@ import { SlidersHorizontal, X } from 'lucide-react'
 import type { Product } from '../../types/product'
 import ProductCard from '../ProductCard/ProductCard'
 import FilterPanel from '../Filters/FilterPanel'
-import { applyFilters, EMPTY_FILTERS, sortProducts, uniqueValues, type ListingFilters, type SortKey } from '../../utils/listing'
+import {
+  activeFilterChips,
+  applyFilters,
+  EMPTY_FILTERS,
+  sortProducts,
+  uniqueValues,
+  type ListingFilters,
+  type SortKey,
+} from '../../utils/listing'
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'recommended', label: 'Recommended' },
@@ -60,6 +68,7 @@ export default function ProductListingLayout({
     (filters.maxPrice > 0 ? 1 : 0)
 
   const resetFilters = () => setFilters(EMPTY_FILTERS)
+  const chips = useMemo(() => activeFilterChips(filters), [filters])
 
   const filterPanelProps = {
     filters,
@@ -116,6 +125,24 @@ export default function ProductListingLayout({
         </label>
       </div>
 
+      {chips.length > 0 && (
+        <div className="flex items-center gap-2 overflow-x-auto pt-3 pb-1" aria-label="Active filters">
+          {chips.map((chip) => (
+            <button
+              key={chip.key}
+              onClick={() => setFilters(chip.remove(filters))}
+              className="flex shrink-0 items-center gap-1.5 rounded-full border border-plum-200 bg-plum-50 px-3 py-1.5 text-xs font-semibold text-plum-600 hover:bg-plum-100"
+            >
+              {chip.label}
+              <X size={12} />
+            </button>
+          ))}
+          <button onClick={resetFilters} className="shrink-0 text-xs font-semibold text-coral-700 hover:underline">
+            Clear all
+          </button>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-8 py-6 lg:grid-cols-[240px_1fr]">
         <aside className="hidden lg:block">
           <FilterPanel {...filterPanelProps} />
@@ -149,17 +176,19 @@ export default function ProductListingLayout({
       {drawerOpen && (
         <div className="fixed inset-0 z-[70] flex lg:hidden">
           <div className="absolute inset-0 bg-ink/50 animate-fade-in" onClick={() => setDrawerOpen(false)} />
-          <div className="relative ml-auto flex h-full w-[88%] max-w-sm flex-col bg-white p-5 animate-slide-up overflow-y-auto">
-            <div className="mb-4 flex items-center justify-between">
+          <div className="relative ml-auto flex h-full w-[88%] max-w-sm flex-col bg-white p-5 animate-slide-up">
+            <div className="mb-4 flex shrink-0 items-center justify-between">
               <h2 className="font-display text-lg font-bold text-ink">Filters</h2>
               <button aria-label="Close filters" onClick={() => setDrawerOpen(false)} className="rounded-lg p-1.5 hover:bg-grey-100">
                 <X size={20} />
               </button>
             </div>
-            <FilterPanel {...filterPanelProps} />
+            <div className="flex-1 overflow-y-auto">
+              <FilterPanel {...filterPanelProps} />
+            </div>
             <button
               onClick={() => setDrawerOpen(false)}
-              className="sticky bottom-0 mt-4 rounded-xl bg-plum py-3 text-sm font-bold text-white"
+              className="mt-4 shrink-0 rounded-xl bg-plum py-3 text-sm font-bold text-white"
             >
               Show {filtered.length} looks
             </button>

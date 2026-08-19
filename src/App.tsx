@@ -11,8 +11,10 @@ import Search from './pages/Search/Search'
 import Wishlist from './pages/Wishlist/Wishlist'
 import Bag from './pages/Bag/Bag'
 import GroupOrders from './pages/GroupOrders/GroupOrders'
+import Profile from './pages/Profile/Profile'
 import StaticPage from './pages/Static/StaticPage'
 import NotFound from './pages/NotFound/NotFound'
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 
 export default function App() {
   return (
@@ -35,6 +37,14 @@ export default function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/bag" element={<Bag />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/legal/:slug" element={<StaticPage />} />
         <Route path="/help/:slug" element={<StaticPage />} />
         <Route path="/company/:slug" element={<StaticPage />} />

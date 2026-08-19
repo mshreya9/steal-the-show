@@ -68,8 +68,8 @@ export default function Navbar() {
           >
             <Menu size={24} />
           </button>
-          <Link to="/" className="shrink-0 font-display text-lg font-extrabold tracking-tight text-plum sm:text-xl">
-            STEAL THE SHOW
+          <Link to="/" className="shrink-0 font-display text-base font-extrabold tracking-tight text-plum min-[380px]:text-lg sm:text-xl">
+            Steal the Show
           </Link>
         </div>
 
@@ -112,7 +112,7 @@ export default function Navbar() {
           <Link
             to="/wishlist"
             aria-label={`Wishlist, ${ids.length} items`}
-            className="relative rounded-lg p-2 text-ink hover:bg-plum-50 hover:text-plum"
+            className="relative hidden rounded-lg p-2 text-ink hover:bg-plum-50 hover:text-plum min-[380px]:block"
           >
             <Heart size={20} />
             {ids.length > 0 && (
@@ -138,33 +138,32 @@ export default function Navbar() {
             <button
               onClick={() => (isAuthenticated ? setAccountOpen((v) => !v) : navigate('/login'))}
               aria-label="Account"
+              aria-haspopup="menu"
               aria-expanded={isAuthenticated ? accountOpen : undefined}
               className="rounded-lg p-2 text-ink hover:bg-plum-50 hover:text-plum"
             >
               <User size={20} />
             </button>
             {isAuthenticated && accountOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-grey-200 bg-white p-2 shadow-pop animate-slide-down">
+              <div
+                role="menu"
+                className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-grey-200 bg-white p-2 shadow-pop animate-slide-down"
+              >
                 <p className="truncate px-2 py-1.5 text-sm font-semibold text-ink">Hi, {user?.name || 'there'}</p>
                 <Link
-                  to="/wishlist"
+                  to="/profile"
+                  role="menuitem"
                   onClick={() => setAccountOpen(false)}
                   className="block rounded-lg px-2 py-1.5 text-sm text-grey-DEFAULT hover:bg-plum-50 hover:text-plum"
                 >
-                  Wishlist
-                </Link>
-                <Link
-                  to="/bag"
-                  onClick={() => setAccountOpen(false)}
-                  className="block rounded-lg px-2 py-1.5 text-sm text-grey-DEFAULT hover:bg-plum-50 hover:text-plum"
-                >
-                  Bag
+                  My Profile
                 </Link>
                 <button
-                  onClick={() => {
-                    logout()
+                  role="menuitem"
+                  onClick={async () => {
                     setAccountOpen(false)
-                    navigate('/')
+                    await logout()
+                    navigate('/login')
                   }}
                   className="block w-full rounded-lg px-2 py-1.5 text-left text-sm font-semibold text-coral-700 hover:bg-coral-50"
                 >
@@ -190,7 +189,7 @@ export default function Navbar() {
             <div className="absolute inset-0 bg-ink/50 animate-fade-in" onClick={() => setMobileOpen(false)} />
           <div className="relative flex h-full w-[85%] max-w-sm flex-col overflow-y-auto bg-white p-5 animate-slide-up">
             <div className="mb-6 flex items-center justify-between">
-              <span className="font-display text-lg font-extrabold text-plum">STEAL THE SHOW</span>
+              <span className="font-display text-lg font-extrabold text-plum">Steal the Show</span>
               <button aria-label="Close menu" onClick={() => setMobileOpen(false)} className="rounded-lg p-1.5 hover:bg-grey-100">
                 <X size={22} />
               </button>
@@ -205,7 +204,16 @@ export default function Navbar() {
                 Log in / Sign up
               </Link>
             ) : (
-              <p className="mb-6 text-sm font-semibold text-ink">Hi, {user?.name || 'there'} 👋</p>
+              <div className="mb-6 flex flex-col gap-3">
+                <p className="text-sm font-semibold text-ink">Hi, {user?.name || 'there'} 👋</p>
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className="text-sm font-semibold text-plum"
+                >
+                  My Profile
+                </Link>
+              </div>
             )}
 
             <p className="mb-2 text-xs font-bold uppercase tracking-wide text-grey">Shop by Occasion</p>
@@ -243,10 +251,10 @@ export default function Navbar() {
               </Link>
               {isAuthenticated && (
                 <button
-                  onClick={() => {
-                    logout()
+                  onClick={async () => {
                     setMobileOpen(false)
-                    navigate('/')
+                    await logout()
+                    navigate('/login')
                   }}
                   className="flex items-center gap-2 text-left text-sm font-semibold text-coral-700"
                 >
