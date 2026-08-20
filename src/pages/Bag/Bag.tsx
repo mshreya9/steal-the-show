@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Heart, Minus, Plus, Scissors, ShoppingBag, Trash2 } from 'lucide-react'
+import { CheckCircle, Heart, Minus, Plus, Scissors, ShoppingBag, Trash2 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
+import { useAuth } from '../../context/AuthContext'
+import { useOrders } from '../../context/OrderContext'
 import { getProductById } from '../../data/products'
 import Button from '../../components/ui/Button'
 import InventoryBadge from '../../components/InventoryBadge/InventoryBadge'
@@ -9,12 +12,51 @@ import ProductImage from '../../components/ProductImage/ProductImage'
 import { formatINR } from '../../utils/inventory'
 
 export default function Bag() {
-  const { items, removeItem, updateQuantity } = useCart()
+  const { items, removeItem, updateQuantity, clear } = useCart()
   const { toggle: toggleWishlist } = useWishlist()
+  const { user, requireAuth } = useAuth()
+  const { placeOrder } = useOrders()
+  const [orderPlaced, setOrderPlaced] = useState(false)
 
   const rows = items
     .map((item) => ({ item, product: getProductById(item.productId) }))
     .filter((r) => r.product)
+
+  const handleCheckout = () => {
+    requireAuth(() => {
+      if (user) {
+        const orderItems = rows.map(({ item, product }) => ({
+          productId: product!.id,
+          name: product!.name,
+          mode: item.mode,
+          size: item.size,
+          quantity: item.quantity,
+          price: item.mode === 'rent' ? product!.rentalPrice : product!.buyPrice,
+          rentalPeriod: item.mode === 'rent' ? product!.rentalPeriod : undefined,
+        }))
+        placeOrder(user.uid, orderItems, subtotal)
+      }
+      clear()
+      setOrderPlaced(true)
+    })
+  }
+
+  if (orderPlaced) {
+    return (
+      <div className="container-shell flex flex-col items-center justify-center py-24 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-plum-50 text-plum">
+          <CheckCircle size={28} />
+        </div>
+        <h1 className="mt-5 font-display text-2xl font-bold text-ink sm:text-3xl">
+          Your order has been placed!
+        </h1>
+        <p className="mt-2 text-grey-DEFAULT">Thank you for being a valued member.</p>
+        <Link to="/shop">
+          <Button className="mt-6">Continue Shopping</Button>
+        </Link>
+      </div>
+    )
+  }
 
   if (rows.length === 0) {
     return (
@@ -133,10 +175,9 @@ export default function Bag() {
             <span>Total</span>
             <span>{formatINR(subtotal)}</span>
           </div>
-          <Button fullWidth size="lg" className="mt-5" disabled>
-            Checkout coming soon
+          <Button fullWidth size="lg" className="mt-5" onClick={handleCheckout}>
+            Checkout
           </Button>
-          <p className="mt-2 text-center text-xs text-grey">Payment and checkout will be available in the next phase.</p>
 
           <Link
             to="/finder"

@@ -1,12 +1,16 @@
 import { useState } from 'react'
-import { Pencil } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Package, Pencil, Scissors } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import { useAuth } from '../../context/AuthContext'
+import { useOrders } from '../../context/OrderContext'
 import { saveUserProfile } from '../../services/authService'
+import { formatINR } from '../../utils/inventory'
 
 export default function Profile() {
   const { user, refreshProfile } = useAuth()
+  const { ordersForUser } = useOrders()
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState(user?.name ?? '')
   const [email, setEmail] = useState(user?.email ?? '')
@@ -18,6 +22,8 @@ export default function Profile() {
   const [error, setError] = useState('')
 
   if (!user) return null
+
+  const orders = ordersForUser(user.uid)
 
   const startEdit = () => {
     setName(user.name)
@@ -122,6 +128,58 @@ export default function Profile() {
             </div>
           </div>
         )}
+      </div>
+
+      <div className="mt-8 rounded-2xl border border-grey-200 bg-white p-5 sm:p-6">
+        <h2 className="font-display text-xl font-bold text-ink">My Orders</h2>
+
+        {orders.length === 0 ? (
+          <p className="mt-3 text-sm text-grey-DEFAULT">You haven&apos;t placed any orders yet.</p>
+        ) : (
+          <div className="mt-4 flex flex-col gap-4">
+            {orders.map((order) => (
+              <div key={order.id} className="rounded-xl border border-grey-200 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wide text-grey">{order.id}</p>
+                    <p className="mt-0.5 text-xs text-grey-DEFAULT">
+                      {new Date(order.placedAt).toLocaleDateString('en-IN', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </p>
+                  </div>
+                  <p className="text-sm font-bold text-ink">{formatINR(order.total)}</p>
+                </div>
+                <div className="mt-3 flex flex-col gap-1.5 border-t border-grey-200 pt-3">
+                  {order.items.map((item, i) => (
+                    <div key={i} className="flex items-center justify-between gap-2 text-sm">
+                      <span className="flex items-center gap-1.5 text-ink">
+                        <Package size={13} className="shrink-0 text-plum-400" />
+                        {item.name}
+                        <span className="text-xs text-grey">
+                          ({item.mode === 'rent' ? 'Rent' : 'Buy'} · Size {item.size} · Qty {item.quantity})
+                        </span>
+                      </span>
+                      <span className="shrink-0 font-semibold text-ink">
+                        {formatINR(item.price * item.quantity)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <Link
+          to="/finder"
+          className="mt-5 flex items-center gap-2 rounded-xl border border-dashed border-grey-300 p-3 text-xs font-semibold text-grey-DEFAULT hover:border-plum hover:text-plum"
+        >
+          <Scissors size={14} className="shrink-0 text-plum-400" />
+          Need alterations on an order? Find nearby stitching services.
+        </Link>
       </div>
     </div>
   )

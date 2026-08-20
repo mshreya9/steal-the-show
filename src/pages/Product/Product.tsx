@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
-import { Heart, MapPin, Minus, Plus, Star, Users, Zap } from 'lucide-react'
+import { Heart, MapPin, Minus, Plus, ShieldCheck, Star, Users, Zap } from 'lucide-react'
 import { getProductById, PRODUCTS } from '../../data/products'
 import { useWishlist } from '../../context/WishlistContext'
 import { useCart } from '../../context/CartContext'
@@ -145,6 +145,12 @@ export default function Product() {
             </span>
             {mode === 'rent' && <span className="pb-1 text-sm font-medium text-grey">rent {product.rentalPeriod}</span>}
           </div>
+          {mode === 'rent' && (
+            <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-grey-DEFAULT">
+              <ShieldCheck size={14} className="shrink-0 text-success" />
+              This price includes a refundable security deposit — no surprise charges at checkout.
+            </p>
+          )}
 
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <InventoryBadge inventory={product.inventory} />

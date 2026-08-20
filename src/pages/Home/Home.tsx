@@ -7,8 +7,7 @@ import CategoryCard from '../../components/CategoryCard/CategoryCard'
 import { OCCASIONS } from '../../data/occasions'
 import { CATEGORIES } from '../../data/categories'
 import { PRODUCTS } from '../../data/products'
-import { HERO_IMAGE } from '../../utils/localFallback'
-import PexelsImage from '../../components/PexelsImage/PexelsImage'
+import heroPhoto from '../../assets/images/fallback/performance.jpg'
 
 const TRENDING_IDS = [1, 3, 9, 16, 21, 26, 32, 37]
 const trending = TRENDING_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter(Boolean) as typeof PRODUCTS
@@ -18,14 +17,15 @@ export default function Home() {
     <div>
       {/* HERO */}
       <section className="relative overflow-hidden bg-plum-500">
-        <PexelsImage
-          query="red carpet fashion event"
-          fallbackSrc={HERO_IMAGE}
-          alt="Models dressed for a themed event, ready to steal the show"
-          loading="eager"
-          className="h-full w-full object-cover opacity-70"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-plum-800/90 via-plum-700/60 to-plum-500/30" />
+        <div className="absolute inset-0 animate-kenburns">
+          <img
+            src={heroPhoto}
+            alt="A dancer mid-performance on stage, dressed to steal the show"
+            loading="eager"
+            className="h-full w-full object-cover opacity-80"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-plum-800/90 via-plum-700/55 to-plum-500/25" />
         <div className="container-shell relative flex min-h-[520px] flex-col justify-center py-16 sm:min-h-[600px]">
           <p className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white backdrop-blur">
             <Zap size={12} className="fill-coral-400 text-coral-400" /> Delivery within 24 hours
