@@ -23,7 +23,7 @@ export interface Testimonial {
 // not invented quotes, since no names/reviews were supplied alongside them.
 export const TESTIMONIALS: Testimonial[] = [
   { id: 't1', type: 'photo', src: garbaIndoor, aspect: '3 / 4', caption: 'Navratri Night', tag: 'Rented Lehenga' },
-  { id: 't2', type: 'video', src: tryOnVideo, aspect: '480 / 848', caption: 'In-Store Try-On', tag: 'Costume Pick' },
+  { id: 't2', type: 'video', src: tryOnVideo, aspect: '480 / 848', caption: 'Panda Costume', tag: 'Costume Pick' },
   { id: 't3', type: 'photo', src: halloweenGroup, aspect: '4 / 3', caption: 'Halloween Squad', tag: 'Group Costumes' },
   { id: 't4', type: 'photo', src: garbaDance, aspect: '3 / 4', caption: 'Garba Dance Floor', tag: 'Rented Lehenga' },
   { id: 't10', type: 'photo', src: heistGroup, aspect: '16 / 9', caption: 'Heist Squad', tag: 'Group Costumes' },
