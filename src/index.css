@@ -52,6 +52,14 @@ body {
   -webkit-line-clamp: 2;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .shimmer-bg {
   background: linear-gradient(90deg, #F2F0F1 25%, #E4E1E2 37%, #F2F0F1 63%);
   background-size: 400% 100%;

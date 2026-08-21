@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { ChevronDown, Heart, Menu, Search, ShoppingBag, User, X } from 'lucide-react'
 import MegaMenu from './MegaMenu'
+import Logo from '../Logo/Logo'
 import SearchBar from '../SearchBar/SearchBar'
 import { useAuth } from '../../context/AuthContext'
 import { useCart } from '../../context/CartContext'
@@ -68,7 +69,8 @@ export default function Navbar() {
           >
             <Menu size={24} />
           </button>
-          <Link to="/home" className="shrink-0 font-display text-base font-extrabold tracking-tight text-plum min-[380px]:text-lg sm:text-xl">
+          <Link to="/home" className="flex shrink-0 items-center gap-1.5 font-display text-base font-extrabold tracking-tight text-plum min-[380px]:text-lg sm:text-xl">
+            <Logo />
             Steal the Show
           </Link>
         </div>
@@ -189,7 +191,10 @@ export default function Navbar() {
             <div className="absolute inset-0 bg-ink/50 animate-fade-in" onClick={() => setMobileOpen(false)} />
           <div className="relative flex h-full w-[85%] max-w-sm flex-col overflow-y-auto bg-white p-5 animate-slide-up">
             <div className="mb-6 flex items-center justify-between">
-              <span className="font-display text-lg font-extrabold text-plum">Steal the Show</span>
+              <span className="flex items-center gap-1.5 font-display text-lg font-extrabold text-plum">
+                <Logo className="h-7 w-7" />
+                Steal the Show
+              </span>
               <button aria-label="Close menu" onClick={() => setMobileOpen(false)} className="rounded-lg p-1.5 hover:bg-grey-100">
                 <X size={22} />
               </button>

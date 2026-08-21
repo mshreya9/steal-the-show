@@ -4,6 +4,7 @@ import Button from '../../components/ui/Button'
 import ProductCard from '../../components/ProductCard/ProductCard'
 import OccasionCard from '../../components/OccasionCard/OccasionCard'
 import CategoryCard from '../../components/CategoryCard/CategoryCard'
+import TestimonialsSection from '../../components/Testimonials/TestimonialsSection'
 import { OCCASIONS } from '../../data/occasions'
 import { CATEGORIES } from '../../data/categories'
 import { PRODUCTS } from '../../data/products'
@@ -147,6 +148,8 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <TestimonialsSection />
 
       {/* GROUP ORDERS */}
       <section className="py-14 sm:py-20">
